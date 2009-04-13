@@ -1,0 +1,5 @@
+; $Id: wurfl.info,v 1.1 2009/04/13 19:20:27 tdrycker Exp $
+name = wurfl
+description = "This module will integrate wurfl with Drupal "
+core = 6.x
+package = Mobile
