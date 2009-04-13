@@ -34,6 +34,10 @@ INSTALLATION
 ============
 See INSTALL.txt
 
+RELATED MODULES
+===============
+This module integrates with the Mobile Tools module (http://drupal.org/project/mobile_tools)
+
 AUTHOR/MAINTAINER
 =================
 Tom Deryckere

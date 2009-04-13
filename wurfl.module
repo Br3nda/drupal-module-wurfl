@@ -1,5 +1,5 @@
 <?php
-// $Id: wurfl.module,v 1.1 2009/04/13 19:20:27 tdrycker Exp $
+// $Id: wurfl.module,v 1.2 2009/04/13 20:16:39 tdrycker Exp $
 
 /**
  * @file
@@ -70,7 +70,7 @@ function wurfl_get_requestingDevice() {
 function wurfl_test_page() {
   
  
-  $output .= t('Access this page with your mobile device, or use the !switcher module to test different user agents', array('!switcher', l('https://addons.mozilla.org/en-US/firefox/addon/59', 'Firefox Agent Switcher extension')));
+  $output .= t('Access this page with your mobile device, or use the !switcher module to test different user agents', array('!switcher' => l( 'Firefox Agent Switcher extension', 'https://addons.mozilla.org/en-US/firefox/addon/59')));
   $requestingDevice = wurfl_get_requestingDevice();
   $output .= '<h2>' . t('Device information') . '</h2>';
   $output .= t('This is a short collection of parameters that can be retrieved using WURFL');
@@ -84,6 +84,7 @@ function wurfl_test_page() {
   $output .= '<li>Model Name: ' . $requestingDevice->getCapability("model_name")  . '</li>';
   $output .= '</ul>';
   $output .= '<h2>display</h2>';
+  $output .= '<ul>';
   $output .= '<li>Resolution Width: ' . $requestingDevice->getCapability("resolution_width")  . '</li>';
   $output .= '<li>Resolution Height: ' . $requestingDevice->getCapability("resolution_height")  . '</li>';
    $output .= '</ul>';
@@ -91,17 +92,16 @@ function wurfl_test_page() {
     $output .= '<ul>';
   $output .= '<li>Ajax/Javascript support: ' . $requestingDevice->getCapability("ajax_support_javascript") . '</li>'; 
   $output .= '<li>Mobile Browser: ' . $requestingDevice->getCapability("mobile_browser") . '</li>';
-  
   $output .= '</ul>';
   $output .= '<h2>' . t('wml_ui') . '</h2>';
   $output .= '<ul>';
   $output .= '<li>Prefix for phonecall: ' . $requestingDevice->getCapability("wml_make_phone_call_string") . '</li>';
   $output .= '</ul>';
   $output .= '<h2>' . t('xhtml_ui') . '</h2>';
-    $output .= '<li>Prefix for phonecall: ' . $requestingDevice->getCapability("wml_make_phone_call_string") . '</li>';
-      $output .= '<li>Xhtml Preferred Markup: ' . $requestingDevice->getCapability("preferred_markup")  . '</li>';
+  $output .= '<ul>';
+  $output .= '<li>Prefix for phonecall: ' . $requestingDevice->getCapability("wml_make_phone_call_string") . '</li>';
+  $output .= '<li>Xhtml Preferred Markup: ' . $requestingDevice->getCapability("preferred_markup")  . '</li>';
   $output .= '</ul>';
-
   return $output;
 }
 /**
@@ -115,7 +115,10 @@ function wurfl_is_mobile_device() {
 
 
 function wurfl_configuration() {
-  $ouput .= t('No configuration possible yet. To test the module click on !test_module.', array('!test_module' => l('admin/settings/wurfl/test', 'WURFL test')));
+  $output .= t('No configuration possible yet. To test the module click on !test_module.', array('!test_module' => l('WURFL test','admin/settings/wurfl/test')));
+  $output .= '<br>';
+  $output .= t('Advanced configurations can be done in the wurfl-config.xml file, located in the resources folder of your WURFL project.');
+  return $output;
 }
 
 /**
