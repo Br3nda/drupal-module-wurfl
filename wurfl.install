@@ -1,0 +1,64 @@
+<?php 
+
+function wurfl_install() {	
+	drupal_install_schema('wurfl');
+
+	/* TODO: parse and install devices on module enable..
+	module_load_include('inc', 'wurfl', 'wurfl.parser');
+	$file = drupal_get_path('module', 'wurfl') . '/wurfl.xml';
+	$wurfl = wurfl_parse($file);
+	$updates = 0;
+	
+	foreach($wurfl['devices'] as $device) {
+		$device['deviceID'] = $device['id'];
+  	$device['capabilities'] = serialize($device['capabilities']);
+  	drupal_write_record('wurfl_devices', $device);
+  	$updates++;				
+	}
+	
+	drupal_set_message("{$updates} updates.");*/	
+}
+
+function wurfl_uninstall() {
+	 drupal_uninstall_schema('wurfl');
+}
+
+function wurfl_schema() {
+	$schema['wurfl_devices'] = array(
+		'fields' => array(
+			'id' => array(
+				'description' => 'Device ID',
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+			),
+			'user_agent' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+			),
+			'fall_back' => array(
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => FALSE,
+			),
+      'actual_device_root' => array(
+        'type' => 'int',
+				'size' => 'tiny',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'default' => 0
+			),
+			'capabilities' => array(
+        'type' => 'text',
+        'not null' => FALSE,
+			),
+		),
+    'indexes' => array(
+      'user_agent'     => array('user_agent'),
+    ),		
+    'primary key' => array('id'),		
+	);
+	
+	return $schema;
+}
