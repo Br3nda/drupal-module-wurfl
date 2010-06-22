@@ -1,10 +1,13 @@
 <?php 
 
+// $Id  $
+
+/**
+ * Implementation of hook_views_data().
+ */
 function wurfl_views_data() {
 	$data = array();
 	
-	// Define the base group of this table. Fields that don't
-	// have a group defined will go into this field by default.
 	$data['wurfl_devices']['table']['group']  = t('WURFL');
 	
 	$data['wurfl_devices']['table']['base'] = array(

@@ -1,3 +1,5 @@
+// $Id  $
+
 name = WURFL
 description = "This module will integrate wurfl with Drupal "
 core = 6.x

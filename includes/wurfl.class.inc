@@ -1,5 +1,7 @@
 <?php
 
+// $Id  $
+
 // the script will use this to remove useless WAP Gateway chatter
 define("REMOVE_REGEX",'/\s?UP\.Link\/[0-9\. ]+/');
 /**

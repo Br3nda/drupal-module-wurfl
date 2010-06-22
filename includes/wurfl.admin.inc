@@ -1,10 +1,13 @@
 <?php 
 
+// $Id $
+
 function wurfl_overview() {
 	if(module_exists('views')) {
 		return views_embed_view('wurfl');
 	} else {
 		drupal_set_message(t('You need install and enable Views module so you view this page.'));
+		return '';
 	}
 }
 
@@ -34,7 +37,7 @@ function wurfl_test_form($form) {
 		'#type' => 'submit',
 		'#value' => t('Get Capabilities'),
 		'#ahah' => array(
-			'path' => 'admin/build/wurfl/callback',
+			'path' => 'admin/build/wurfl/test/callback',
 			'wrapper' => 'wurfl-results',
 			'method' => 'replace',
 			'effect' => 'fade',
@@ -165,10 +168,9 @@ function wurfl_update_form_submit($form, &$form_state) {
 	drupal_set_message("{$new_entries} new entries.");
 	drupal_set_message("{$updates} updates on existing entries.");	
 	
-  /* TODO: use batch api for parsing and updating database..
+  /* TODO: use batch api for parsing wurfl and updating database..
    * 
    * $batch = array(
-    //'operations' => $operations,
     'operations' => array(
   		array('wurfl_batch_process', array($file)),
   	),

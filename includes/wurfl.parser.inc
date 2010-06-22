@@ -1,5 +1,7 @@
 <?php 
 
+// $Id  $
+
 $wurfl = array();
 $curr_event;
 $curr_device;

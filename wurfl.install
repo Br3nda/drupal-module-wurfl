@@ -1,5 +1,7 @@
 <?php 
 
+// $Id  $
+
 function wurfl_install() {	
 	drupal_install_schema('wurfl');
 

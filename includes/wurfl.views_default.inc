@@ -1,5 +1,7 @@
 <?php
 
+// $Id  $
+
 /**
  * @file
  * View for listing devices by wurfl.

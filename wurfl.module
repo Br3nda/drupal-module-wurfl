@@ -1,18 +1,24 @@
 <?php
 
+// $Id  $
+
 define('WURFL_XML', drupal_get_path('module', 'wurfl') . '/resources/wurfl.xml');
 define('WURFL_CVS', 'http://wurfl.cvs.sourceforge.net/viewvc/wurfl/xml/wurfl.xml');
 define('WURFL_IMAGES', drupal_get_path('module', 'wurfl') . '/resources/device_pix/');
+define('WURFL_NODEVICE_IMAGE', drupal_get_path('module', 'wurfl') . '/resources/no-device.png');
 
 module_load_include('inc', 'wurfl', 'includes/wurfl.class');
 module_load_include('inc', 'wurfl', 'includes/wurfl.parser');
 
-
+/**
+ * Implementation of hook_init().
+ */
 function wurfl_init() {
 	$ua = $_SERVER['HTTP_USER_AGENT'];;
 	$device = new wurfl();
 	$matched = $device->getDeviceCapabilities($ua);
 	$GLOBALS['wurfl_device'] = ($matched ? $device : new stdClass());
+	// TODO: append user agent to database if not detected
 }
 
 /**
@@ -34,7 +40,7 @@ function wurfl_menu() {
     'title' => 'WURFL',
     'access arguments' => array('administer wurfl'),
     'page callback' => 'wurfl_overview',
-    'description' => 'Allows the creation and assignment of arbitrary wurfls to node types.',
+    'description' => t('Administer WURFL. List, test and update device entries.'),
     'file' => 'includes/wurfl.admin.inc',
   );
   $items['admin/build/wurfl/list'] = array(
@@ -54,7 +60,7 @@ function wurfl_menu() {
     'description' => 'WURFL Test Devices Capabilities',
     'file' => 'includes/wurfl.admin.inc',
   );
-  $items['admin/build/wurfl/callback'] = array(
+  $items['admin/build/wurfl/test/callback'] = array(
     'title' => 'Test',
     'type' => MENU_CALLBACK,
     'access arguments' => array('administer wurfl'),
@@ -68,7 +74,7 @@ function wurfl_menu() {
     'access arguments' => array('administer wurfl'),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('wurfl_update_form'),
-    'description' => 'WURFL Test Devices Capabilities',
+    'description' => 'Update WURFL device entries',
     'file' => 'includes/wurfl.admin.inc',
   );    
   $items['admin/build/wurfl/add'] = array(
@@ -104,6 +110,9 @@ function wurfl_form_alter(&$form, &$form_state, $form_id) {
 
 }
 
+/**
+ * Implementation of hook_perm().
+ */
 function wurfl_perm() {
 	return array('administer wurfl');
 }
