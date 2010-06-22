@@ -158,33 +158,107 @@ function wurfl_views_default_views() {
 	    'relationship' => 'none',
 	  ),
 	));
+	$handler->override_option('filters', array(
+	  'id' => array(
+	    'operator' => 'contains',
+	    'value' => '',
+	    'group' => '0',
+	    'exposed' => TRUE,
+	    'expose' => array(
+	      'use_operator' => 0,
+	      'operator' => 'id_op',
+	      'identifier' => 'id',
+	      'label' => 'Device ID',
+	      'optional' => 1,
+	      'remember' => 0,
+	    ),
+	    'case' => 0,
+	    'id' => 'id',
+	    'table' => 'wurfl_devices',
+	    'field' => 'id',
+	    'override' => array(
+	      'button' => 'Override',
+	    ),
+	    'relationship' => 'none',
+	  ),
+	  'user_agent' => array(
+	    'operator' => 'contains',
+	    'value' => '',
+	    'group' => '0',
+	    'exposed' => TRUE,
+	    'expose' => array(
+	      'use_operator' => 0,
+	      'operator' => 'user_agent_op',
+	      'identifier' => 'user_agent',
+	      'label' => 'User Agent',
+	      'optional' => 1,
+	      'remember' => 0,
+	    ),
+	    'case' => 0,
+	    'id' => 'user_agent',
+	    'table' => 'wurfl_devices',
+	    'field' => 'user_agent',
+	    'override' => array(
+	      'button' => 'Override',
+	    ),
+	    'relationship' => 'none',
+	  ),
+	  'brand_name' => array(
+	    'operator' => 'contains',
+	    'value' => '',
+	    'group' => '0',
+	    'exposed' => TRUE,
+	    'expose' => array(
+	      'use_operator' => 0,
+	      'operator' => 'brand_name_op',
+	      'identifier' => 'brand_name',
+	      'label' => 'Brand Name',
+	      'optional' => 1,
+	      'remember' => 0,
+	    ),
+	    'case' => 0,
+	    'id' => 'brand_name',
+	    'table' => 'wurfl_devices',
+	    'field' => 'brand_name',
+	    'override' => array(
+	      'button' => 'Override',
+	    ),
+	    'relationship' => 'none',
+	  ),
+	  'model_name' => array(
+	    'operator' => 'contains',
+	    'value' => '',
+	    'group' => '0',
+	    'exposed' => TRUE,
+	    'expose' => array(
+	      'use_operator' => 0,
+	      'operator' => 'model_name_op',
+	      'identifier' => 'model_name',
+	      'label' => 'Model Name',
+	      'optional' => 1,
+	      'remember' => 0,
+	    ),
+	    'case' => 0,
+	    'id' => 'model_name',
+	    'table' => 'wurfl_devices',
+	    'field' => 'model_name',
+	    'override' => array(
+	      'button' => 'Override',
+	    ),
+	    'relationship' => 'none',
+	  ),
+	));
 	$handler->override_option('access', array(
 	  'type' => 'none',
 	));
 	$handler->override_option('cache', array(
 	  'type' => 'none',
 	));
-	$handler->override_option('items_per_page', 20);
-	$handler = $view->new_display('page', 'Devices', 'page_1');
-	$handler->override_option('title', 'WURFL Devices');
 	$handler->override_option('use_ajax', TRUE);
+	$handler->override_option('items_per_page', 20);
 	$handler->override_option('use_pager', '1');
 	$handler->override_option('style_plugin', 'table');
-	$handler->override_option('path', 'admin/build/wurfl/list');
-	$handler->override_option('menu', array(
-	  'type' => 'none',
-	  'title' => '',
-	  'description' => '',
-	  'weight' => 0,
-	  'name' => 'navigation',
-	));
-	$handler->override_option('tab_options', array(
-	  'type' => 'none',
-	  'title' => '',
-	  'description' => '',
-	  'weight' => 0,
-	  'name' => 'navigation',
-	));
+	
 	
 
   $views[$view->name] = $view;
