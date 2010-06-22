@@ -117,7 +117,8 @@ function wurfl_update_form_submit($form, &$form_state) {
 			$method = 'GET';
 			$request = drupal_http_request(WURFL_CVS, $headers, $method);
 			$file = file_directory_path() . '/wurfl_update.xml';
-			file_save_data($request->data, $file);
+			$file = file_save_data($request->data, $file);
+			$file = $file->filename;
 			break;
 		case 'local':
 		default:
@@ -130,29 +131,30 @@ function wurfl_update_form_submit($form, &$form_state) {
 	$updates = 0;
 	$errors = 0;
 	
-	/*
-	 * TODO: needs review !!!! 
-	 */
-	
 	foreach($wurfl['devices'] as $device) {
 		$device['brand_name'] = $device['product_info']['brand_name'];
 		$device['model_name'] = $device['product_info']['model_name'];
 		$device['series'] = $device['product_info']['nokia_series'];
   	$device['capabilities'] = serialize($device);
   	
-		$exists = db_result(db_query("SELECT COUNT(*) as found FROM {wurfl_devices} WHERE id = '%s'", $device['id']));  	
-		
-		if($values['old_entries'] == 'tuncate') {
+		if($values['old_entries'] == 'truncate') {
 			$record = drupal_write_record('wurfl_devices', $device);
-		}	else if($values['old_entries'] == 'update') {
-	  	$record = ($exists > 0 ? drupal_write_record('wurfl_devices', $device, 'id') : drupal_write_record('wurfl_devices', $device));  		
-  	} else if($values['old_entries'] === 'keep') {
-  		$record = ($exists > 0 ? false : drupal_write_record('wurfl_devices', $device));
+		}	
+		else if($values['old_entries'] == 'update') {
+			
+			$exists = db_result(db_query("SELECT COUNT(*) as found FROM {wurfl_devices} WHERE id = '%s'", $device['id']));
+	  	$record = ((int)$exists > 0 ? drupal_write_record('wurfl_devices', $device, 'id') : drupal_write_record('wurfl_devices', $device));  		
+  	} 
+  	else if($values['old_entries'] === 'keep') {
+  		
+  		$exists = db_result(db_query("SELECT COUNT(*) as found FROM {wurfl_devices} WHERE id = '%s'", $device['id']));
+  		$record = ((int)$exists > 0 ? false : drupal_write_record('wurfl_devices', $device));
+  		
   	}
   	
   	if($record == SAVED_NEW) {
   		$new_entries++;
-  	} else if($record = SAVED_UPDATED) {
+  	} else if($record == SAVED_UPDATED) {
   		$updates++;
   	}	else {
   		// some error happened..

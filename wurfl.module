@@ -1,6 +1,6 @@
 <?php
 
-// $Id  $
+// $Id: wurfl.module,v 1.2.2.5 2010/06/22 23:47:00 kharbat Exp $
 
 define('WURFL_XML', drupal_get_path('module', 'wurfl') . '/resources/wurfl.xml');
 define('WURFL_CVS', 'http://wurfl.cvs.sourceforge.net/viewvc/wurfl/xml/wurfl.xml');

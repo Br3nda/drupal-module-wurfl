@@ -112,7 +112,7 @@ function wurfl_startElement($parser, $name, $attr) {
 			break;
 		case "default":
 			// unknown events are not welcome
-			die($name." is an unknown event<br>");
+			die($name." is an unknown event<br />");
 			break;
 	}	
 
