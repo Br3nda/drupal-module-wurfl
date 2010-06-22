@@ -1,6 +1,6 @@
 <?php 
 
-// $Id  $
+// $Id: wurfl.views.inc,v 1.1.2.4 2010/06/22 23:47:00 kharbat Exp $
 
 /**
  * Implementation of hook_views_data().

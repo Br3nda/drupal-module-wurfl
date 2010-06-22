@@ -1,6 +1,6 @@
 <?php
 
-// $Id  $
+// $Id: wurfl.class.inc,v 1.1.2.3 2010/06/22 23:47:00 kharbat Exp $
 
 // the script will use this to remove useless WAP Gateway chatter
 define("REMOVE_REGEX",'/\s?UP\.Link\/[0-9\. ]+/');

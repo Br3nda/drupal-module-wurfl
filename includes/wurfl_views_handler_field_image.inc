@@ -1,6 +1,6 @@
 <?php 
 
-// $Id  $
+// $Id: wurfl_views_handler_field_image.inc,v 1.1.2.3 2010/06/22 23:47:00 kharbat Exp $
 
 class wurfl_views_handler_field_image extends views_handler_field_markup {
 	function construct() {

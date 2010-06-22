@@ -1,6 +1,6 @@
 <?php 
 
-// $Id  $
+// $Id: wurfl.parser.inc,v 1.1.2.5 2010/06/22 23:47:00 kharbat Exp $
 
 $wurfl = array();
 $curr_event;

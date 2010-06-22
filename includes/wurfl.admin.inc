@@ -1,6 +1,6 @@
 <?php 
 
-// $Id $
+// $Id: wurfl.admin.inc,v 1.1.2.5 2010/06/22 23:47:00 kharbat Exp $
 
 function wurfl_overview() {
 	if(module_exists('views')) {

@@ -1,6 +1,6 @@
 <?php
 
-// $Id  $
+// $Id: wurfl.batch.inc,v 1.1.2.3 2010/06/22 23:47:00 kharbat Exp $
 
 function wurfl_batch_process($file, &$context) {
   if (!isset($context['sandbox']['progress'])) {
