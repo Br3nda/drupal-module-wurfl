@@ -1,0 +1,48 @@
+// $Id  $
+
+CONTENTS OF THIS FILE
+---------------------
+
+ * Requirements
+ * Installation
+ * Testing
+ * Usage
+ * More Information
+ 
+ 
+ REQUIREMENTS
+ ------------
+
+ No special setup or requirements so far.
+ 
+
+ INSTALLATION
+ -------------
+ 
+ Once WURFL module is downloaded and enabled. You should go to Admin > Build > WURFL > Update
+ and select your update method:
+ 
+ 1- Local file: to update WURFL using a local file wurfl.xml copied saved in this location modules/wurfl/resources/wurfl.xml
+ 2- CVS: to download and update WURFL automatically with the lastest wurfl.xml file in the CVS repository.
+ 
+ 
+ TESTING
+ ------------- 
+ 
+ To test WURFL manually, go to Admin > Build > WURFL > Test 
+ and type the string of the User Agent, then click on Get Capabilities.
+ An AHAH response must appear with the results.
+ 
+ To test WURFL in action you can hit the url http://localhost/wurfl/test/callback from your device,
+ and it will print the device name and image if detected.
+ 
+ 
+ USAGE
+ -------------  
+ WURFL automatically detects every request on your website. A global WURFL object gets registed so you can manipulate it with your code:
+ 
+ global $wurfl_device  OR  $GLOBALS['wurfl_device'];
+ 
+ Other handy functions are available at your finger tips:
+ 
+ // TO BE ADDED
