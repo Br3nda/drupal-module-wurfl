@@ -1,6 +1,6 @@
 <?php 
 
-$wurfl;
+$wurfl = array();
 $curr_event;
 $curr_device;
 $curr_group;

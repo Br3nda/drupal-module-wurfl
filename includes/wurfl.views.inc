@@ -100,9 +100,37 @@ function wurfl_views_data() {
    'sort' => array(
      'handler' => 'views_handler_sort',
    ),
- );  
+ );
+
+	$data['wurfl_devices']['image'] = array(
+   'title' => t('Image'),
+ 	 'help' => t('The device image'),
+   'field' => array(
+     'handler' => 'wurfl_views_handler_field_image',
+	   'sort' => array(
+       'handler' => 'views_handler_sort',
+     ),
+   ),
+   
+ ); 
 
  return $data;
 }
 
+/**
+ * Implementation of hook_views_handlers().
+ */
+function wurfl_views_handlers() {
+  return array(
+    'info' => array(
+      'path' => drupal_get_path('module', 'wurfl') . '/includes',
+    ),
+    'handlers' => array(
+      // field handlers
+      'wurfl_views_handler_field_image' => array(
+        'parent' => 'views_handler_field_markup',
+      ),
+    ),
+  );
+}
 ?>

@@ -3,10 +3,12 @@
 function wurfl_overview() {
 	if(module_exists('views')) {
 		return views_embed_view('wurfl');
+	} else {
+		drupal_set_message(t('You need install and enable Views module so you view this page.'));
 	}
 }
 
-function wurfl_test_form() {
+function wurfl_test_form($form) {
 	$form = array();
 	
 	$form['wurfl_test'] = array(
@@ -18,33 +20,65 @@ function wurfl_test_form() {
 		'#type' => 'textfield',
 		'#title' => t('User agent'),
 	);
-
-	$form['submit'] = array(
-		'#type' => 'submit',
-		'#value' => t('Submit'),
+	
+	$form['wurfl_capabilities'] = array(
+		'#type' => 'fieldset',
+		'#title' => t('Capabilities'),
 	);
+	
+	$form['wurfl_capabilities']['results'] = array(
+		'#value' => '<div id="wurfl-results"></div>',
+	);
+
+	$form['test'] = array(
+		'#type' => 'submit',
+		'#value' => t('Get Capabilities'),
+		'#ahah' => array(
+			'path' => 'admin/build/wurfl/callback',
+			'wrapper' => 'wurfl-results',
+			'method' => 'replace',
+			'effect' => 'fade',
+		),
+	);	
 	
 	return $form;	
 }
 
-function wurfl_test_form_submit($form, &$form_state) {
-	$values = $form_state['values'];
-	$user_agent = $values['user_agent'];
+
+function wurfl_test_callback() {
+	$user_agent = $_POST['user_agent'];
 	$wurfl = new wurfl();
 	$matched = $wurfl->getDeviceCapabilities($user_agent);
+	
+	if($matched) {
+		$output = '<pre>' . print_r($wurfl->capabilities, TRUE) . '</pre>';
+	} else {
+		$output = '<strong>' . t('This device could not be identified!') . '</strong>';
+	}
 
-	if($matched){
-		echo "<pre>";
-		print_r($wurfl->capabilities);
-		echo "</pre>";
-	}else{
-		echo "<strong>This device could not be identified!</strong>";
-	}	
+	drupal_json($output);
+	exit;
 }
 
 function wurfl_update_form() {
 	$form = array();
 	
+	$form['wurfl_update_options'] = array(
+		'#type' => 'fieldset',
+		'#title' => t('WURFL update options'),
+	);
+			
+	$form['wurfl_update_options']['old_entries'] = array(
+	  '#type' => 'radios',
+	  '#title' => t('What do you want to do with existing entries ?'),
+		'#required' => TRUE,
+	  '#options' => array(
+			'truncate' => ('Delete all entries'), 
+			'update' => t('Modify existing entries'),
+			'keep' => t('Keep existing entries untouched'),
+		),
+	);
+
 	$form['wurfl_update_method'] = array(
 		'#type' => 'fieldset',
 		'#title' => t('Select WURFL update method'),
@@ -69,18 +103,22 @@ function wurfl_update_form_submit($form, &$form_state) {
 	$values = $form_state['values'];
 	$devices = array();
 	
+	if($values['old_entries'] == 'truncate') { // truncate table
+		db_query('TRUNCATE TABLE {wurfl_devices}');
+		drupal_set_message(t('Old entries have been deleted'));
+	}
+	
 	switch($values['method']) {
 		case 'CVS':
 			$headers = array();
 			$method = 'GET';
-			$url = 'http://wurfl.cvs.sourceforge.net/viewvc/wurfl/xml/wurfl.xml';
-			$request = drupal_http_request($url, $headers, $method);
-			$file = file_directory_temp() . '/wurfl_update.xml';
+			$request = drupal_http_request(WURFL_CVS, $headers, $method);
+			$file = file_directory_path() . '/wurfl_update.xml';
 			file_save_data($request->data, $file);
 			break;
 		case 'local':
 		default:
-			$file = drupal_get_path('module', 'wurfl') . '/wurfl.xml';			
+			$file = WURFL_XML;			
 			break;			
 	}
 	
@@ -89,12 +127,25 @@ function wurfl_update_form_submit($form, &$form_state) {
 	$updates = 0;
 	$errors = 0;
 	
+	/*
+	 * TODO: needs review !!!! 
+	 */
+	
 	foreach($wurfl['devices'] as $device) {
 		$device['brand_name'] = $device['product_info']['brand_name'];
 		$device['model_name'] = $device['product_info']['model_name'];
 		$device['series'] = $device['product_info']['nokia_series'];
   	$device['capabilities'] = serialize($device);
-  	$record = drupal_write_record('wurfl_devices', $device /*, 'id'*/);
+  	
+		$exists = db_result(db_query("SELECT COUNT(*) as found FROM {wurfl_devices} WHERE id = '%s'", $device['id']));  	
+		
+		if($values['old_entries'] == 'tuncate') {
+			$record = drupal_write_record('wurfl_devices', $device);
+		}	else if($values['old_entries'] == 'update') {
+	  	$record = ($exists > 0 ? drupal_write_record('wurfl_devices', $device, 'id') : drupal_write_record('wurfl_devices', $device));  		
+  	} else if($values['old_entries'] === 'keep') {
+  		$record = ($exists > 0 ? false : drupal_write_record('wurfl_devices', $device));
+  	}
   	
   	if($record == SAVED_NEW) {
   		$new_entries++;

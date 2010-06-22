@@ -1,23 +1,18 @@
 <?php
 
+define('WURFL_XML', drupal_get_path('module', 'wurfl') . '/resources/wurfl.xml');
+define('WURFL_CVS', 'http://wurfl.cvs.sourceforge.net/viewvc/wurfl/xml/wurfl.xml');
+define('WURFL_IMAGES', drupal_get_path('module', 'wurfl') . '/resources/device_pix/');
+
 module_load_include('inc', 'wurfl', 'includes/wurfl.class');
 module_load_include('inc', 'wurfl', 'includes/wurfl.parser');
 
+
 function wurfl_init() {
-	/*print $_SERVER['HTTP_USER_AGENT'];
 	$ua = $_SERVER['HTTP_USER_AGENT'];;
-	$wurfl = new wurfl();
-	$matched = $wurfl->getDeviceCapabilities($ua);
-	variable_set('ua', $ua);
-	if($matched){
-		echo "<pre>";
-		print_r($wurfl->capabilities);
-		echo "</pre>";
-	}else{
-		echo "<strong>This device could not be identified!</strong>";
-	}
-	
-	die();*/
+	$device = new wurfl();
+	$matched = $device->getDeviceCapabilities($ua);
+	$GLOBALS['wurfl_device'] = ($matched ? $device : new stdClass());
 }
 
 /**
@@ -58,7 +53,15 @@ function wurfl_menu() {
     'page arguments' => array('wurfl_test_form'),
     'description' => 'WURFL Test Devices Capabilities',
     'file' => 'includes/wurfl.admin.inc',
-  );  
+  );
+  $items['admin/build/wurfl/callback'] = array(
+    'title' => 'Test',
+    'type' => MENU_CALLBACK,
+    'access arguments' => array('administer wurfl'),
+    'page callback' => 'wurfl_test_callback',
+    'description' => 'WURFL Test Devices Capabilities',
+    'file' => 'includes/wurfl.admin.inc',
+  );     
   $items['admin/build/wurfl/update'] = array(
     'title' => 'Update',
     'type' => MENU_LOCAL_TASK,
@@ -94,6 +97,11 @@ function wurfl_menu() {
   );
 
   return $items;
+}
+
+
+function wurfl_form_alter(&$form, &$form_state, $form_id) {
+
 }
 
 function wurfl_perm() {
