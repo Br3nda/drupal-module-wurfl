@@ -37,6 +37,21 @@ function wurfl_schema() {
         'length' => 255,
         'not null' => FALSE,
 			),
+			'brand_name' => array(
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => FALSE,
+			),
+			'model_name' => array(
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => FALSE,
+			),	
+			'series' => array(
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => FALSE,
+			),						
 			'fall_back' => array(
         'type' => 'varchar',
         'length' => 128,
@@ -52,7 +67,7 @@ function wurfl_schema() {
 			'capabilities' => array(
         'type' => 'text',
         'not null' => FALSE,
-			),
+			),		
 		),
     'indexes' => array(
       'user_agent'     => array('user_agent'),

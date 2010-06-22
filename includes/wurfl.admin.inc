@@ -1,14 +1,9 @@
 <?php 
 
 function wurfl_overview() {
-	$count_query = "SELECT COUNT(*) FROM {wurfl_devices}";
-	$devices = pager_query("SELECT * FROM {wurfl_devices}", 20, 0, $count_query);
-	
-	while($device = db_fetch_object($devices)) {
-		$output .= $device->id . '<br />';
+	if(module_exists('views')) {
+		return views_embed_view('wurfl');
 	}
-	
-	return $output . theme('pager', NULL, 10);
 }
 
 function wurfl_test_form() {
@@ -95,6 +90,9 @@ function wurfl_update_form_submit($form, &$form_state) {
 	$errors = 0;
 	
 	foreach($wurfl['devices'] as $device) {
+		$device['brand_name'] = $device['product_info']['brand_name'];
+		$device['model_name'] = $device['product_info']['model_name'];
+		$device['series'] = $device['product_info']['nokia_series'];
   	$device['capabilities'] = serialize($device);
   	$record = drupal_write_record('wurfl_devices', $device /*, 'id'*/);
   	

@@ -1,7 +1,7 @@
 <?php
 
-module_load_include('inc', 'wurfl', 'wurfl.class');
-module_load_include('inc', 'wurfl', 'wurfl.parser');
+module_load_include('inc', 'wurfl', 'includes/wurfl.class');
+module_load_include('inc', 'wurfl', 'includes/wurfl.parser');
 
 function wurfl_init() {
 	/*print $_SERVER['HTTP_USER_AGENT'];
@@ -20,6 +20,16 @@ function wurfl_init() {
 	die();*/
 }
 
+/**
+* Implementation of hook_views_api().
+*/
+function wurfl_views_api() {
+ return array(
+   'api' => 2.0,
+   'path' => drupal_get_path('module', 'wurfl') . '/includes',
+ );
+}
+
 
 /**
  * Implementation of hook_menu().
@@ -30,14 +40,14 @@ function wurfl_menu() {
     'access arguments' => array('administer wurfl'),
     'page callback' => 'wurfl_overview',
     'description' => 'Allows the creation and assignment of arbitrary wurfls to node types.',
-    'file' => 'wurfl.admin.inc',
+    'file' => 'includes/wurfl.admin.inc',
   );
   $items['admin/build/wurfl/list'] = array(
     'title' => 'List',
     'weight' => -10,
     'access arguments' => array('administer wurfl'),
     'page callback' => 'wurfl_overview',
-    'file' => 'wurfl.admin.inc',
+    'file' => 'includes/wurfl.admin.inc',
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
   $items['admin/build/wurfl/test'] = array(
@@ -47,7 +57,7 @@ function wurfl_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('wurfl_test_form'),
     'description' => 'WURFL Test Devices Capabilities',
-    'file' => 'wurfl.admin.inc',
+    'file' => 'includes/wurfl.admin.inc',
   );  
   $items['admin/build/wurfl/update'] = array(
     'title' => 'Update',
@@ -56,14 +66,14 @@ function wurfl_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('wurfl_update_form'),
     'description' => 'WURFL Test Devices Capabilities',
-    'file' => 'wurfl.admin.inc',
+    'file' => 'includes/wurfl.admin.inc',
   );    
   $items['admin/build/wurfl/add'] = array(
     'title' => 'Add WURFL Device',
     'access arguments' => array('administer wurfl'),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('wurfl_add_form'),
-    'file' => 'wurfl.admin.inc',
+    'file' => 'includes/wurfl.admin.inc',
     'type' => MENU_CALLBACK,
   );
   $items['admin/build/wurfl/edit/%wurfl'] = array(
@@ -72,7 +82,7 @@ function wurfl_menu() {
     'access arguments' => array('administer wurfl'),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('wurfl_edit_form', 4),
-    'file' => 'wurfl.admin.inc',
+    'file' => 'includes/wurfl.admin.inc',
   );  
   $items['admin/build/wurfl/delete/%wurfl'] = array(
     'title' => 'Delete wurfl',
@@ -80,7 +90,7 @@ function wurfl_menu() {
     'access arguments' => array('administer wurfl'),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('wurfl_delete_form'),
-    'file' => 'wurfl.admin.inc',
+    'file' => 'includes/wurfl.admin.inc',
   );
 
   return $items;
