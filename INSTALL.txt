@@ -1,4 +1,4 @@
-// $Id: INSTALL.txt,v 1.1.2.3 2010/06/22 23:47:00 kharbat Exp $
+// $Id: INSTALL.txt,v 1.1.2.4 2010/06/23 18:07:30 kharbat Exp $
 
 CONTENTS OF THIS FILE
 ---------------------
@@ -33,7 +33,7 @@ CONTENTS OF THIS FILE
  and type the string of the User Agent, then click on Get Capabilities.
  An AHAH response must appear with the results.
  
- To test WURFL in action you can hit the url http://localhost/wurfl/test/callback from your device,
+ To test WURFL in action you can hit the url http://yoursite/wurfl/test from your device,
  and it will print the device name and image if detected.
  
  

@@ -1,6 +1,6 @@
 <?php 
 
-// $Id: wurfl.admin.inc,v 1.1.2.6 2010/06/23 16:21:05 kharbat Exp $
+// $Id: wurfl.admin.inc,v 1.1.2.7 2010/06/23 18:05:14 kharbat Exp $
 
 function wurfl_overview() {
 	if(module_exists('views')) {
@@ -22,6 +22,13 @@ function wurfl_test_form($form) {
 	$form['wurfl_test']['user_agent'] = array(
 		'#type' => 'textfield',
 		'#title' => t('User agent'),
+		'#description' => t('You can try some of these') . ': <br />'.
+		'<ul>
+		  <li><pre>SonyEricssonK700i/R2AC SEMC-Browser/4.0.2 Profile/MIDP-2.0 Configuration/CLDC-1.1</pre></li>
+		  <li><pre>MOT-T720/S_G_05.30.0CR MIB/2.0 Profile/MIDP-1.0 Configuration/CLDC-1.0</pre></li>
+		  <li><pre>SAGEM-myX5-2/1.0 Profile/MIDP-2.0 Configuration/CLDC-1.0 UP.Browser/6.2.2.6.d.2 (GUI) MMP/1.0</pre></li>
+		  <li><pre>NokiaN90-1/3.0541.5.2 Series60/2.8 Profile/MIDP-2.0 Configuration/CLDC-1.1</pre></li>
+		</ul>',
 	);
 	
 	$form['wurfl_capabilities'] = array(
@@ -60,6 +67,15 @@ function wurfl_test_callback() {
 	}
 
 	drupal_json($output);
+	exit;
+}
+
+function wurfl_test() {
+	global $wurfl_device;
+	$image = theme('image', $wurfl_device->device_image) . '<br />';
+	$name = $wurfl_device->brand . ' ' . $wurfl_device->model . '<br />';
+	$agent = $wurfl_device->user_agent;
+	print $image . $name . $agent;
 	exit;
 }
 

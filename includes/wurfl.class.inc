@@ -1,6 +1,6 @@
 <?php
 
-// $Id: wurfl.class.inc,v 1.1.2.4 2010/06/23 16:21:05 kharbat Exp $
+// $Id: wurfl.class.inc,v 1.1.2.5 2010/06/23 18:05:14 kharbat Exp $
 
 // the script will use this to remove useless WAP Gateway chatter
 define("REMOVE_REGEX",'/\s?UP\.Link\/[0-9\. ]+/');
@@ -19,6 +19,7 @@ class wurfl {
 	 * @access public
 	 */
 	var $ua="";	
+	var $user_agent ="";	
 
 	/**
 	 * If true, Openwave's GUI (mostly wml 1.3) is supported
@@ -97,8 +98,10 @@ class wurfl {
 	function wurfl($ua = null,  $check_accept=false) {
 		$this->http_accept = isset($_SERVER['HTTP_ACCEPT'])? $_SERVER['HTTP_ACCEPT']:'';
 		
-		if($ua)
+		if($ua) {
+			$this->ua = $ua;
 			return $this->getDeviceCapabilities($ua, $check_accept);
+		}
 	}
 	
 	function getCapability($capability) {
@@ -421,6 +424,7 @@ class wurfl {
 		$this->model = $this->capabilities['product_info']['model_name'];
 		$this->id = $this->capabilities['id'];
 		
-		$this->device_image = (file_exists(WURFL_IMAGES . "{$this->id}.gif") ? WURFL_IMAGES . "{$this->id}.gif" : WURFL_NODEVICE_IMAGE);
+		$image = WURFL_IMAGES . "{$this->id}.gif";
+		$this->device_image = (file_exists($image) ? $image : WURFL_NODEVICE_IMAGE);
 	}
 }
