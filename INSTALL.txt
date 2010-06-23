@@ -1,4 +1,4 @@
-// $Id: INSTALL.txt,v 1.1.2.4 2010/06/23 18:07:30 kharbat Exp $
+// $Id: INSTALL.txt,v 1.1.2.5 2010/06/23 18:15:42 kharbat Exp $
 
 CONTENTS OF THIS FILE
 ---------------------
@@ -25,6 +25,8 @@ CONTENTS OF THIS FILE
  1- Local file: to update WURFL using a local file wurfl.xml copied saved in this location modules/wurfl/resources/wurfl.xml
  2- CVS: to download and update WURFL automatically with the lastest wurfl.xml file in the CVS repository.
  
+ You can download latest WURFL xml from here:
+ http://sourceforge.net/projects/wurfl/files/WURFL/
  
  TESTING
  ------------- 
@@ -45,4 +47,11 @@ CONTENTS OF THIS FILE
  
  Other handy functions are available at your finger tips:
  
- // TO BE ADDED
+ wurfl_is_mobile_device()
+ wurfl_devicecapability($capability, $ua = null) 
+ 
+ 
+ MORE INFORMATION
+ ----------------
+ 
+ 
