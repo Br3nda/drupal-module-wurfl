@@ -1,6 +1,6 @@
 <?php
 
-// $Id: wurfl.module,v 1.2.2.6 2010/06/22 23:49:05 kharbat Exp $
+// $Id: wurfl.module,v 1.2.2.7 2010/06/23 16:21:05 kharbat Exp $
 
 define('WURFL_XML', drupal_get_path('module', 'wurfl') . '/resources/wurfl.xml');
 define('WURFL_CVS', 'http://wurfl.cvs.sourceforge.net/viewvc/wurfl/xml/wurfl.xml');
@@ -15,9 +15,8 @@ module_load_include('inc', 'wurfl', 'includes/wurfl.parser');
  */
 function wurfl_init() {
 	$ua = $_SERVER['HTTP_USER_AGENT'];;
-	$device = new wurfl();
-	$matched = $device->getDeviceCapabilities($ua);
-	$GLOBALS['wurfl_device'] = ($matched ? $device : new stdClass());
+	$device = new wurfl($ua, TRUE);
+	$GLOBALS['wurfl_device'] = (is_object($device) ? $device : new stdClass());
 	// TODO: append user agent to database if not detected
 }
 
@@ -48,7 +47,7 @@ function wurfl_menu() {
     'page arguments' => array('wurfl_test_form'),
     'description' => 'WURFL Test Devices Capabilities',
     'file' => 'includes/wurfl.admin.inc',
-  );
+  ); 
   $items['admin/build/wurfl/test/callback'] = array(
     'title' => 'Test',
     'type' => MENU_CALLBACK,
@@ -56,7 +55,15 @@ function wurfl_menu() {
     'page callback' => 'wurfl_test_callback',
     'description' => 'WURFL Test Devices Capabilities',
     'file' => 'includes/wurfl.admin.inc',
-  );     
+  );
+  $items['wurfl/test'] = array(
+    'title' => 'WURFL Realtime Test',
+    'type' => MENU_LOCAL_TASK,
+    'access arguments' => array('access content'),
+    'page callback' => 'wurfl_test',
+    'description' => 'WURFL Test Devices Capabilities',
+    'file' => 'includes/wurfl.admin.inc',
+  );        
   $items['admin/build/wurfl/update'] = array(
     'title' => 'Update',
     'type' => MENU_LOCAL_TASK,
@@ -115,4 +122,30 @@ function wurfl_views_api() {
  */
 function wurfl_perm() {
 	return array('administer wurfl');
+}
+
+/**
+ *  Implementation of hook_is_mobile_device() as being used by the Mobile Tools module
+ */ 
+function wurfl_is_mobile_device() {
+ 	global $wurfl_device;
+ 	
+ 	// This is strange, return value is string, not boolean
+  return ($wurfl_device->capabilities['product_info']['is_wireless_device'] ? 'mobile' : 'desktop');
+}
+
+/**
+ *  Implementation of hook_devicecapability as defined by 
+ *  the mobile_tools module 
+ */ 
+function wurfl_devicecapability($capability, $ua = null) {
+	if($ua) {
+		$device = new wurfl($ua);
+		return $device->getCapability($capability);
+			
+	} else {
+		
+		global $wurfl_device;
+		return $wurfl_device->getCapability($capability);		
+	}
 }

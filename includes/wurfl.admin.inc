@@ -1,6 +1,6 @@
 <?php 
 
-// $Id: wurfl.admin.inc,v 1.1.2.5 2010/06/22 23:47:00 kharbat Exp $
+// $Id: wurfl.admin.inc,v 1.1.2.6 2010/06/23 16:21:05 kharbat Exp $
 
 function wurfl_overview() {
 	if(module_exists('views')) {
@@ -186,6 +186,8 @@ function wurfl_update_form_submit($form, &$form_state) {
   
   batch_set($batch);*/
 }
+
+// TODO: complete those forms
 
 function wurfl_add_form() {
 	return '';	
