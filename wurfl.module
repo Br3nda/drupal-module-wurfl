@@ -1,6 +1,6 @@
 <?php
 
-// $Id: wurfl.module,v 1.2.2.7 2010/06/23 16:21:05 kharbat Exp $
+// $Id: wurfl.module,v 1.2.2.8 2010/06/26 23:43:28 kharbat Exp $
 
 define('WURFL_XML', drupal_get_path('module', 'wurfl') . '/resources/wurfl.xml');
 define('WURFL_CVS', 'http://wurfl.cvs.sourceforge.net/viewvc/wurfl/xml/wurfl.xml');
@@ -74,14 +74,15 @@ function wurfl_menu() {
     'file' => 'includes/wurfl.admin.inc',
   );    
   $items['admin/build/wurfl/add'] = array(
-    'title' => 'Add WURFL Device',
+    'title' => 'Add device',
     'access arguments' => array('administer wurfl'),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('wurfl_add_form'),
     'file' => 'includes/wurfl.admin.inc',
-    'type' => MENU_CALLBACK,
+    'type' => MENU_LOCAL_TASK,
+  	'weight' => 10,
   );
-  $items['admin/build/wurfl/edit/%wurfl'] = array(
+  $items['admin/build/wurfl/edit/%'] = array(
     'title' => 'Edit WURFL Device',
     'type' => MENU_CALLBACK,
     'access arguments' => array('administer wurfl'),

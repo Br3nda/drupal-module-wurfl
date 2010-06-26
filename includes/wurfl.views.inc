@@ -1,6 +1,6 @@
 <?php 
 
-// $Id: wurfl.views.inc,v 1.1.2.4 2010/06/22 23:47:00 kharbat Exp $
+// $Id: wurfl.views.inc,v 1.1.2.5 2010/06/26 23:43:28 kharbat Exp $
 
 /**
  * Implementation of hook_views_data().
@@ -11,7 +11,7 @@ function wurfl_views_data() {
 	$data['wurfl_devices']['table']['group']  = t('WURFL');
 	
 	$data['wurfl_devices']['table']['base'] = array(
-	  'field' => 'id',
+	  'field' => 'did',
 	  'title' => t('WURFL'),
 	);
 
@@ -49,7 +49,7 @@ function wurfl_views_data() {
    'sort' => array(
      'handler' => 'views_handler_sort',
    ),
- );
+ 	);
  
 	$data['wurfl_devices']['brand_name'] = array(
    'title' => t('Brand Name'),
@@ -104,6 +104,14 @@ function wurfl_views_data() {
      'handler' => 'views_handler_sort',
    ),
  );
+ 
+	$data['wurfl_devices']['edit'] = array(
+   'title' => t('Edit'),
+ 	 'help' => t('Edit device link'),
+   'field' => array(
+     'handler' => 'wurfl_views_handler_edit_url',
+   ),
+ ); 
 
 	$data['wurfl_devices']['image'] = array(
    'title' => t('Image'),
@@ -133,6 +141,9 @@ function wurfl_views_handlers() {
       'wurfl_views_handler_field_image' => array(
         'parent' => 'views_handler_field_markup',
       ),
+      'wurfl_views_handler_edit_url' => array(
+        'parent' => 'views_handler_field_url',
+      ),       
     ),
   );
 }

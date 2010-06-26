@@ -1,6 +1,6 @@
 <?php 
 
-// $Id: wurfl.admin.inc,v 1.1.2.7 2010/06/23 18:05:14 kharbat Exp $
+// $Id: wurfl.admin.inc,v 1.1.2.8 2010/06/26 23:43:28 kharbat Exp $
 
 function wurfl_overview() {
 	if(module_exists('views')) {
@@ -81,22 +81,28 @@ function wurfl_test() {
 
 function wurfl_update_form() {
 	$form = array();
+
+	// Check if there are old entries in the database
+	$results = db_result(db_query('SELECT COUNT(*) FROM {wurfl_devices} WHERE 1'));
+
+	if($results > 0) {
 	
-	$form['wurfl_update_options'] = array(
-		'#type' => 'fieldset',
-		'#title' => t('WURFL update options'),
-	);
-			
-	$form['wurfl_update_options']['old_entries'] = array(
-	  '#type' => 'radios',
-	  '#title' => t('What do you want to do with existing entries ?'),
-		'#required' => TRUE,
-	  '#options' => array(
-			'truncate' => ('Delete all entries'), 
-			'update' => t('Modify existing entries'),
-			'keep' => t('Keep existing entries untouched'),
-		),
-	);
+		$form['wurfl_update_options'] = array(
+			'#type' => 'fieldset',
+			'#title' => t('WURFL update options'),
+		);
+				
+		$form['wurfl_update_options']['old_entries'] = array(
+		  '#type' => 'radios',
+		  '#title' => t('What do you want to do with existing entries ?'),
+			'#required' => TRUE,
+		  '#options' => array(
+				'truncate' => ('Delete all entries'), 
+				'update' => t('Modify existing entries'),
+				'keep' => t('Keep existing entries untouched'),
+			),
+		);		
+	}
 
 	$form['wurfl_update_method'] = array(
 		'#type' => 'fieldset',
@@ -150,13 +156,9 @@ function wurfl_update_form_submit($form, &$form_state) {
 	foreach($wurfl['devices'] as $device) {
 		$device['brand_name'] = $device['product_info']['brand_name'];
 		$device['model_name'] = $device['product_info']['model_name'];
-		$device['series'] = $device['product_info']['nokia_series'];
   	$device['capabilities'] = serialize($device);
   	
-		if($values['old_entries'] == 'truncate') {
-			$record = drupal_write_record('wurfl_devices', $device);
-		}	
-		else if($values['old_entries'] == 'update') {
+		if($values['old_entries'] == 'update') {
 			
 			$exists = db_result(db_query("SELECT COUNT(*) as found FROM {wurfl_devices} WHERE id = '%s'", $device['id']));
 	  	$record = ((int)$exists > 0 ? drupal_write_record('wurfl_devices', $device, 'id') : drupal_write_record('wurfl_devices', $device));  		
@@ -166,6 +168,8 @@ function wurfl_update_form_submit($form, &$form_state) {
   		$exists = db_result(db_query("SELECT COUNT(*) as found FROM {wurfl_devices} WHERE id = '%s'", $device['id']));
   		$record = ((int)$exists > 0 ? false : drupal_write_record('wurfl_devices', $device));
   		
+  	} else {
+			$record = drupal_write_record('wurfl_devices', $device); 		
   	}
   	
   	if($record == SAVED_NEW) {
@@ -206,13 +210,100 @@ function wurfl_update_form_submit($form, &$form_state) {
 // TODO: complete those forms
 
 function wurfl_add_form() {
-	return '';	
+	return _wurfl_prepare_form();
 }
 
-function wurfl_edit_form() {
-	return '';	
+function wurfl_add_form_validate($form, &$form_state) {
+	
 }
 
-function wurfl_delete_form() {
-	return '';	
+function wurfl_edit_form(&$form_state, $id) {
+	return _wurfl_prepare_form($id);
+}
+
+function wurfl_save($form, &$form_state) {
+	$device = $form_state['values'];
+	$exists = db_result(db_query("SELECT COUNT(*) as found FROM {wurfl_devices} WHERE id = '%s'", $device['id']));
+  $record = ((int)$exists > 0 ? drupal_write_record('wurfl_devices', $device, 'id') : drupal_write_record('wurfl_devices', $device)); 	
+	if($record) {
+		drupal_set_message(t('Device has been saved'));
+	}
+}
+
+function wurfl_delete_form(&$form_state, $id) {
+	$query = db_query("DELETE FROM {wurfl_devices} WHERE id = '%s'", $id);
+	drupal_set_message(t('Device has been deleted'));	
+}
+
+function _wurfl_prepare_form($id = NULL) {
+	module_load_include('inc', 'wurfl', 'includes/wurfl.template');
+	$template = _wurfl_entry_template();
+	
+	$wurfl = new wurfl('generic');
+	$cap = array();
+	
+	if($id) {
+		$cap = $wurfl->_getDeviceCapabilitiesFromId($id);
+	} else {
+		$cap = $wurfl->capabilities;			
+	}
+
+	$array = array_merge($template, $cap);
+	$form = _wurfl_build_form($array);
+	
+	$form['submit'] = array(
+		'#type' => 'submit',
+		'#value' => t('Submit'),
+	);
+			
+	$form['#submit'][] = 'wurfl_save';	
+
+	return $form;
+}
+
+function _wurfl_build_form($array) {
+	$form = array();
+
+	foreach($array as $key => $value) {
+		$type = 'markup';
+		
+		switch(gettype($value)) {
+			case 'array':				
+				$type = 'fieldset';
+				
+				$form[$key] = array(
+					'#type' => $type,
+					'#title' => $key,
+				);
+				
+				$form[$key] += _wurfl_build_form($value);
+							
+				break;
+				
+			case 'boolean':
+			case '':
+			case '0':
+			case '1':
+			case NULL:
+				$type = 'checkbox';
+				$form[$key] = array(
+					'#type' => $type,
+					'#title' => $key,
+					'#default_value' => $value,
+				);					
+				break;
+				
+			case 'string':
+			case 'integer':
+				$type = 'textfield';
+				$form[$key] = array(
+					'#type' => $type,
+					'#title' => $key,
+					'#default_value' => $value,
+				);					
+				break;	
+		}		
+	}
+	
+	return $form;
 }

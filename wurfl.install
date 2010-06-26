@@ -1,6 +1,6 @@
 <?php 
 
-// $Id: wurfl.install,v 1.1.2.4 2010/06/22 23:47:00 kharbat Exp $
+// $Id: wurfl.install,v 1.1.2.5 2010/06/26 23:43:28 kharbat Exp $
 
 function wurfl_install() {	
 	drupal_install_schema('wurfl');
@@ -28,8 +28,14 @@ function wurfl_uninstall() {
 function wurfl_schema() {
 	$schema['wurfl_devices'] = array(
 		'fields' => array(
+      'did' => array(
+        'description' => 'The Drupal primary identifier for a device.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE
+			),			
 			'id' => array(
-				'description' => 'Device ID',
+				'description' => 'WURFL Device ID',
         'type' => 'varchar',
         'length' => 128,
         'not null' => TRUE,
@@ -72,9 +78,10 @@ function wurfl_schema() {
 			),		
 		),
     'indexes' => array(
-      'user_agent'     => array('user_agent'),
+      'id'     => array('id'),
+			'user_agent'     => array('user_agent'),
     ),		
-    'primary key' => array('id'),		
+    'primary key' => array('did'),		
 	);
 	
 	return $schema;

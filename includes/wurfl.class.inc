@@ -1,6 +1,6 @@
 <?php
 
-// $Id: wurfl.class.inc,v 1.1.2.5 2010/06/23 18:05:14 kharbat Exp $
+// $Id: wurfl.class.inc,v 1.1.2.6 2010/06/26 23:43:28 kharbat Exp $
 
 // the script will use this to remove useless WAP Gateway chatter
 define("REMOVE_REGEX",'/\s?UP\.Link\/[0-9\. ]+/');
@@ -18,7 +18,7 @@ class wurfl {
 	 * @var string
 	 * @access public
 	 */
-	var $ua="";	
+	
 	var $user_agent ="";	
 
 	/**
@@ -77,7 +77,7 @@ class wurfl {
 	 * @var string
 	 * @access public
 	 */
-	var $device_root = '';
+	var $actual_device_root = '';
 	
 	/**
 	 * Device image path and filename, relative to the class file
@@ -99,7 +99,7 @@ class wurfl {
 		$this->http_accept = isset($_SERVER['HTTP_ACCEPT'])? $_SERVER['HTTP_ACCEPT']:'';
 		
 		if($ua) {
-			$this->ua = $ua;
+			$this->user_agent = $ua;
 			return $this->getDeviceCapabilities($ua, $check_accept);
 		}
 	}
@@ -130,7 +130,7 @@ class wurfl {
 	
 	function getDeviceCapabilitiesFromAgent($ua, $check_accept=false) {
 		// Resetting properties
-		$this->device_root = '';
+		$this->actual_device_root = '';
 		$this->device_image = '';
 		$this->user_agent = $ua;
 		$this->found_in_cache = false;
@@ -144,8 +144,8 @@ class wurfl {
 			$this->capabilities = $cache_data['capabilities'];
 			$this->_setGlobalProps();			
 			
-			if($cache_data['device_root'] != ''){
-				$this->device_root = $cache_data['device_root'];
+			if($cache_data['actual_device_root'] != ''){
+				$this->actual_device_root = $cache_data['actual_device_root'];
 			}
 
 			return true;
@@ -175,7 +175,7 @@ class wurfl {
 			// the exact user agent was in the WURFL - Great!
 			$this->_GetFullCapabilities($curr_device['deviceID']);
 			$this->capabilities['matched_at'] = $this->user_agent;
-			$this->_AddUAToCache($this->user_agent, $this->capabilities, $this->device_root);
+			$this->_AddUAToCache($this->user_agent, $this->capabilities, $this->actual_device_root);
 			$this->_setGlobalProps();
 			return true;
 		}
@@ -229,14 +229,14 @@ class wurfl {
 		
 		if(!is_null($matched_dev)){
 			$this->_GetFullCapabilities($matched_dev);
-			$this->_AddUAToCache($this->user_agent,$this->capabilities,$this->device_root);			
+			$this->_AddUAToCache($this->user_agent,$this->capabilities,$this->actual_device_root);			
 			$this->capabilities['matched_at'] = $short_ua;
 			$this->_setGlobalProps();
 			return true;
 		}else{
 			// no match was found
 			$this->capabilities['matched_at'] = $short_ua;
-			$this->_AddUAToCache($this->user_agent, $this->capabilities, $this->device_root);
+			$this->_AddUAToCache($this->user_agent, $this->capabilities, $this->actual_device_root);
 			$this->_setGlobalProps();
 			return false;
 		}		
@@ -245,7 +245,7 @@ class wurfl {
 	
 	/**
 	 * This function checks the user agent for signs that it's a WAP device
-	 * Returns true if a generic ID is found, otherwise false.
+	 * Returns true if a generic id is found, otherwise false.
 	 * This is a last resort function that is only called if the device in question
 	 * does not exist in the WURFL and the class is forced to find another way to
 	 * identify the device.
@@ -328,8 +328,6 @@ class wurfl {
 	 *
 	 */	
 	function _getDeviceCapabilitiesFromId($id) {
-		if(count($this->errors) != 0) return(false);
-		
 		if ($id == 'upgui_generic' ) {
 			$this->GUI = true;
 		}
@@ -339,8 +337,8 @@ class wurfl {
 		
 		if($num_rows > 0){
 			$device = db_fetch_array($result);
-			if($this->device_root == '' && $device['actual_device_root'] == 1){
-				$this->device_root = $device['deviceID'];
+			if($this->actual_device_root == '' && $device['actual_device_root'] == 1){
+				$this->actual_device_root = $device['id'];
 				//$image = IMAGE_DIR.$device['deviceID'].".gif";
 				// PHP evaluates from left to right, so "file_exists" will not get
 				// called if IMAGE_CHECKING is false
@@ -350,6 +348,8 @@ class wurfl {
 				}*/
 			}
 			$cap = unserialize($device['capabilities']);
+			$this->capabilities = $cap;
+			$this->_setGlobalProps();
 			return $cap;
 		}else{
 			// device is not in the WURFL
@@ -399,7 +399,7 @@ class wurfl {
 		if(strlen($ua) < 3)
 			return true;
 		
-		$data = array("capabilities" => $cap, "device_root" => $devroot);
+		$data = array("capabilities" => $cap, "actual_device_root" => $devroot);
 		return cache_set($ua, $data);
 	}
 
