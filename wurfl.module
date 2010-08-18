@@ -1,5 +1,5 @@
 <?php
-// $Id: wurfl.module,v 1.5 2010/08/18 03:40:34 tdrycker Exp $
+// $Id: wurfl.module,v 1.6 2010/08/18 17:18:28 tdrycker Exp $
 
 /**
  * @file
@@ -35,20 +35,30 @@ function wurfl_menu() {
     'title' => 'Wurfl', 
     'file' => 'wurfl.admin.inc',
     'page callback' =>  'wurfl_settings',
-    'access arguments' => array('configure siruna'),
+    'access arguments' => array('configure wurfl'),
     'type' => MENU_NORMAL_ITEM,
     'description' => t('The WURFL module integrates Drupal with WURFL.')
   );
   $items['admin/settings/wurfl/configuration'] = array(
     'title' => 'WURFL configuration',
-    'access arguments' => array('configure siruna'),
+    'access arguments' => array('configure wurfl'),
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -10,
   );
+  
+  $items['admin/settings/wurfl'] = array(
+    'title' => 'Wurfl', 
+    'page callback' =>  'drupal_get_form',
+    'page arguments' => array('wurfl_configuration_form'),
+    'access arguments' => array('configure wurfl'),
+     'type' => MENU_NORMAL_ITEM,
+     'description' => t('The WURFL module integrates Drupal with WURFL.')
+   );
+
   $items['admin/settings/wurfl/test'] = array(
     'title' => 'WURFL test',
     'page callback' => 'wurfl_test_page',
-    'access arguments' => array('configure siruna'),
+    'access arguments' => array('configure wurfl'),
     'type' => MENU_LOCAL_TASK,
     'weight' => 1,
   );  
