@@ -1,0 +1,7 @@
+; id:
+name = WURFL Group Webkit
+description = "Creates a high end Webkit and low end other device group"
+package = Mobile
+core = 6.x
+dependencies[] = wurfl
+dependencies[] = mobile_tools
