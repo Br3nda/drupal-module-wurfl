@@ -1,5 +1,5 @@
 <?php
-// $Id: wurfl.module,v 1.6 2010/08/18 17:18:28 tdrycker Exp $
+// $Id: wurfl.module,v 1.7 2010/08/18 17:31:19 tdrycker Exp $
 
 /**
  * @file
@@ -92,6 +92,7 @@ function wurfl_boot(){
 function wurfl_get_requestingDevice() {
   global $wurflManager;
   if(!is_object($wurflManager)){
+    wurfl_check_library();
     wurfl_boot();
   }
   $requestingDevice =  $wurflManager->getDeviceForHttpRequest($_SERVER);

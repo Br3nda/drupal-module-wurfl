@@ -80,3 +80,26 @@ function theme_wurfl_status($message, $type = "status") {
 
   return $output;
 }
+
+function wurfl_configuration_form($form_state) {
+  $form['lib_path'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Path to WURFL data'),
+    '#description' => t("Absolute path on this server to your installation of the WURFL database.  Module will look for directories called <b>resources</b> and <b>WURFL</b> using this path."),
+    '#default_value' => variable_get('wurfl_data_path', dirname(__FILE__) . '/lib/wurfl'),
+  );
+  $form['advanced'] = array(
+    '#type' => 'markup',
+    '#value' => '<p>' . t('Advanced configurations can be done in the wurfl-config.xml file, located in the resources folder of your WURFL project.') . '</p>',
+  );
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save'),
+  );
+  return $form;
+}
+
+function wurfl_configuration_form_submit($form, &$form_state) {
+  variable_set('wurfl_data_path', $form_state['values']['lib_path']);
+  drupal_set_message(t('The settings have been saved.'));
+}
