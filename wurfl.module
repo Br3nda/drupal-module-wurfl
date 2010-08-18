@@ -1,5 +1,5 @@
 <?php
-// $Id: wurfl.module,v 1.3 2010/08/18 01:22:52 tdrycker Exp $
+// $Id: wurfl.module,v 1.4 2010/08/18 02:41:59 tdrycker Exp $
 
 /**
  * @file
@@ -129,6 +129,9 @@ function wurfl_test_page() {
  *  Implementation of hook_is_mobile_device() as being used by the Mobile Tools module
  */ 
 function wurfl_is_mobile_device() {
+  if(empty($_SERVER['HTTP_USER_AGENT'])) {
+    return array('group' => 'desktop', 'type' => '');
+  }
   $requestingDevice = wurfl_get_requestingDevice();
   $result = ($requestingDevice->getCapability("is_wireless_device") == 'true') ? 'mobile' : 'desktop'; // This is strange, return value is string, not boolean
   return $result;

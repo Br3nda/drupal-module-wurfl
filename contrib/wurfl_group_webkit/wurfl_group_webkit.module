@@ -21,6 +21,9 @@ function wurfl_group_webkit_device_groups() {
 
 // Device detection. Implementaion of hook_is_mobile_device as implemented by Mobile Tools
 function wurfl_group_webkit_is_mobile_device(){
+  if(empty($_SERVER['HTTP_USER_AGENT'])) {
+    return array('group' => 'desktop', 'type' => '');
+  }
   if(!function_exists("wurfl_get_requestingDevice")){
      drupal_load('module', 'wurfl');  }
   $requestingDevice = wurfl_get_requestingDevice();
