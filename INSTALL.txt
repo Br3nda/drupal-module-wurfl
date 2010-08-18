@@ -1,31 +1,33 @@
 INSTALL.txt
 ===========
-This module completely depends on the WURFL PHP api available on http://wurfl.sourceforge.net/nphp/. You need some small configurations in order to make the api work.
+This module completely depends on the WURFL PHP api available on http://wurfl.sourceforge.net/nphp/. You need some small configurations in order to make the api work. By visiting the module settings page you get an overview of the configuration settings.
 
 1) Go to http://wurfl.sourceforge.net/nphp/index.php
 2) Make sure you have the PEAR package installed with the Log library
-3) Download the new WURFL API package http://sourceforge.net/project/showfiles.php?group_id=55408&package_id=313394
-4) Extract the contents in the lib directory of the module
-5) rename the wurfl-php-{x.x} to wurfl
-6) Download the latest wurfl.xml and web_browser_patch.xml and put them in lib/wurfl/resources
-7) edit the lib/wurfl/resources/wurfl-config.xml
+3) Download the new WURFL API package http://sourceforge.net/projects/wurfl/files/WURFL%20PHP/4) 
+ * Extract the contents in the lib directory of the module 
+ * or in your Drupal libraries folder (sites/all/libraries). You can make it if it does not exist.
+4) Download the latest wurfl.xml and web_browser_patch.xml from http://wurfl.sourceforge.net/ (direct link: http://sourceforge.net/projects/wurfl/files%2FWURFL%2Flatest%2Fwurfl-latest.zip/download)
+5) Make a resources and cache folder in  your wurfl library folder
+6) Put the xml files in the resources folder
+7) Create  wurfl-config.xml file. An example file can be found in the wurfl library examples/resources folder. 
+This is an example config file
 
 <wurfl-config>
-    <wurfl>
-        <main-file>wurfl.xml</main-file> 
-        <patches>
-            <patch>web_browsers_patch.xml</patch>
-        </patches>
-        
-    </wurfl>
-    <persistance>
-    	<provider>file</provider>
-    	<params>dir=../WURFL/cache</params>
-    </persistance>
-    <cache>
-    	<provider>file</provider>
-    	<params>dir=../WURFL/cache</params>
-    </cache>
+  <wurfl>
+    <main-file>wurfl.xml</main-file>
+    <patches>
+      <patch>web_browsers_patch.xml</patch>
+    </patches>
+  </wurfl>
+
+  <persistence>
+    <provider>file</provider>
+      <params>dir=../cache</params>
+  </persistence>
+  <cache>
+    <provider>null</provider>
+  </cache>
 </wurfl-config>
 
 More advanced configurations can be done. For this, read the lib/wurfl/README.txt file.
@@ -34,4 +36,4 @@ More advanced configurations can be done. For this, read the lib/wurfl/README.tx
 
 UPDATING
 ========
-wurfl.xml gets updates regularly. Check for new versions on http://sourceforge.net/project/showfiles.php?group_id=55408&package_id=50315
+http://sourceforge.net/projects/wurfl

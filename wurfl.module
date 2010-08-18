@@ -1,5 +1,5 @@
 <?php
-// $Id: wurfl.module,v 1.2 2009/04/13 20:16:39 tdrycker Exp $
+// $Id: wurfl.module,v 1.3 2010/08/18 01:22:52 tdrycker Exp $
 
 /**
  * @file
@@ -20,15 +20,21 @@
  * let's you selected your prefered framework.
  * 
  * Note: to date no other frameworks but WURFL are available.            
- */  
+ */
  
+define("WURFL_DIR", 	variable_get('wurfl_library', '' ) . '/WURFL/');
+define("RESOURCES_DIR", variable_get('wurfl_library', '') . '/resources/');   
+
+
+
 /**
  * Implementation of hook_menu()
  */ 
 function wurfl_menu() {
    $items['admin/settings/wurfl'] = array(
     'title' => 'Wurfl', 
-    'page callback' =>  'wurfl_configuration',
+    'file' => 'wurfl.admin.inc',
+    'page callback' =>  'wurfl_settings',
     'access arguments' => array('configure siruna'),
     'type' => MENU_NORMAL_ITEM,
     'description' => t('The WURFL module integrates Drupal with WURFL.')
@@ -57,12 +63,27 @@ function wurfl_perm() {
 } 
 
 /**
+ * We make the $wurflManager available as global variable.
+ */
+function wurfl_boot(){
+  $wurfl_dir = variable_get('wurfl_library', '');
+  if($wurfl_dir !== ''  && file_exists($wurfl_dir)) {
+    include_once $wurfl_dir . '/WURFL/Application.php';
+    $wurflConfigFile = $wurfl_dir . '/resources/wurfl-config.xml';
+    $wurflConfig = new WURFL_Configuration_XmlConfig($wurflConfigFile);
+    $wurflManagerFactory = new WURFL_WURFLManagerFactory($wurflConfig);
+    global $wurflManager ;
+    $wurflManager = $wurflManagerFactory->create();	
+  }  
+}
+/**
  * Initialisation of the $requestingDevice used to get to the
  */ 
 function wurfl_get_requestingDevice() {
-  require_once dirname(__FILE__) . '/lib/wurfl/WURFL/WURFLManagerProvider.php';
-  $wurflConfigFile = dirname(__FILE__) . "/lib/wurfl/resources/wurfl-config.xml";
-  $wurflManager = WURFL_WURFLManagerProvider::getWURFLManager($wurflConfigFile);	
+  global $wurflManager;
+  if(!is_object($wurflManager)){
+    wurfl_boot();
+  }
   $requestingDevice =  $wurflManager->getDeviceForHttpRequest($_SERVER);
   return $requestingDevice; 
 }
@@ -114,13 +135,6 @@ function wurfl_is_mobile_device() {
 }
 
 
-function wurfl_configuration() {
-  $output .= t('No configuration possible yet. To test the module click on !test_module.', array('!test_module' => l('WURFL test','admin/settings/wurfl/test')));
-  $output .= '<br>';
-  $output .= t('Advanced configurations can be done in the wurfl-config.xml file, located in the resources folder of your WURFL project.');
-  return $output;
-}
-
 /**
  *  Implementation of hook_devicecapability as defined by 
  *  the mobile_tools module 
@@ -128,4 +142,80 @@ function wurfl_configuration() {
 function wurfl_devicecapability($capability) {
   $requestingDevice = wurfl_get_requestingDevice();
   return $requetingDevice->getCapability($capability);
+}
+
+
+/**
+ * Test if the WURFL library is properly installed
+ */
+function wurfl_check_library(){
+  // check if folderwith name wurfl- exist in the folder
+  // get all possible paths
+  $library_paths = array(dirname(__file__) . '/lib');
+  if($handle = opendir('sites')){
+    while($file = readdir($handle)){
+      if(is_dir("sites/$file/libraries")){
+        $library_paths[] = "sites/$file/libraries";
+      }
+    }
+  }
+  $library_path = wurfl_search_library($library_paths);  
+  if($library_path !== FALSE) {
+    variable_set('wurfl_library', $library_path);
+    return $library_path;
+  }
+  return FALSE;
+}
+
+/**
+ * Check if the library is present
+ */
+function wurfl_search_library($paths) {
+  foreach($paths as $dir){
+    if (is_dir($dir) && $handle = opendir($dir)) {
+      while ($file = readdir($handle)) {
+        if (is_dir("$dir/$file")) {
+          $pos = strpos($file, 'wurfl');
+          if($pos !== false) {
+            closedir($handle);
+            return "$dir/$file";
+          }
+        }
+      }
+      closedir($handle);
+    }
+  }
+  return FALSE;
+}
+
+/**
+ * Check if the wurlf.xml file is present in the resources directory
+ */
+function wurfl_check_xml($path) {
+  $handle = opendir("$path/resources");
+  while($file = readdir($handle)) {
+    if(!is_dir("$path/resources/$file")){
+      if($file == "wurfl.xml"){
+        variable_set('wurfl-xml', "$path/resources/$file" );
+        return TRUE;
+      }
+    }
+  }
+  return FALSE;
+}
+
+/**
+ * Check if the wurfl-config.xml file is present in the resources directory
+ */
+function wurfl_check_config($path){
+  $handle = opendir("$path/resources");
+  while($file = readdir($handle)) {
+    if(!is_dir("$path/resources/$file")){
+      if($file == "wurfl-config.xml"){
+        variable_set('wurfl-config-xml', "$path/resources/$file" );
+        return TRUE;
+      }
+    }
+  }
+  return FALSE;
 }
