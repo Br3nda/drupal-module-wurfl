@@ -1,5 +1,5 @@
 <?php
-// $Id: wurfl.module,v 1.4 2010/08/18 02:41:59 tdrycker Exp $
+// $Id: wurfl.module,v 1.5 2010/08/18 03:40:34 tdrycker Exp $
 
 /**
  * @file
@@ -144,7 +144,7 @@ function wurfl_is_mobile_device() {
  */ 
 function wurfl_devicecapability($capability) {
   $requestingDevice = wurfl_get_requestingDevice();
-  return $requetingDevice->getCapability($capability);
+  return $requestingDevice->getCapability($capability);
 }
 
 
