@@ -1,5 +1,5 @@
 <?php
-// $Id: wurfl.module,v 1.7 2010/08/18 17:31:19 tdrycker Exp $
+// $Id: wurfl.module,v 1.8 2010/08/18 17:38:13 tdrycker Exp $
 
 /**
  * @file
@@ -156,6 +156,31 @@ function wurfl_is_mobile_device() {
 function wurfl_devicecapability($capability) {
   $requestingDevice = wurfl_get_requestingDevice();
   return $requestingDevice->getCapability($capability);
+}
+
+/**
+ * Function to return available capabilities for devices.
+ */
+function wurfl_get_capabilities() {
+  global $wurflManager;
+  if ($wurflManager) {
+    $groups =  $wurflManager->getListOfGroups();
+    foreach ($groups as $group) {
+      $capabilities[$group] = $wurflManager->getCapabilitiesNameForGroup($group);
+    }
+  }
+  return (array) $capabilities;
+}
+
+/**
+ * Function to return available groups for attributes.
+ */
+function wurfl_get_groups() {
+  global $wurflManager;
+  if ($wurflManager) {
+    $groups =  $wurflManager->getListOfGroups();
+  }
+  return (array) $groups;
 }
 
 
