@@ -80,10 +80,3 @@ function theme_wurfl_status($message, $type = "status") {
 
   return $output;
 }
-
-
-
-function wurfl_configuration_form_submit($form, &$form_state) {
-  variable_set('wurfl_data_path', $form_state['values']['lib_path']);
-  drupal_set_message(t('The settings have been saved.'));
-}

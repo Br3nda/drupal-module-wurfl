@@ -1,5 +1,5 @@
 <?php
-// $Id: wurfl.module,v 1.9 2010/09/25 16:45:43 tdrycker Exp $
+// $Id: wurfl.module,v 1.10 2010/09/25 17:20:19 tdrycker Exp $
 
 /**
  * @file
@@ -68,7 +68,7 @@ function wurfl_perm() {
  */
 function wurfl_boot(){
   $wurfl_dir = variable_get('wurfl_library', '');
-  if($wurfl_dir !== ''  && file_exists($wurfl_dir)) {
+  if($wurfl_dir !== ''  && file_exists($wurfl_dir . '/resources/wurfl.xml') && file_exists($wurfl_dir . '/resources/wurfl-config.xml')) {
     include_once $wurfl_dir . '/WURFL/Application.php';
     $wurflConfigFile = $wurfl_dir . '/resources/wurfl-config.xml';
     $wurflConfig = new WURFL_Configuration_XmlConfig($wurflConfigFile);

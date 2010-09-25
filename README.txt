@@ -1,3 +1,4 @@
+$Id
 README.txt
 ==========
 The WURFL module is an easy wrapper for the WURFL project (http://wurfl.sourceforge.net/). It can be used as an API for module developers, or themers in order to make adaptive websites. The module doesn't expose end-user functionality.
