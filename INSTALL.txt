@@ -28,7 +28,6 @@ This is an example config file
   <wurfl>
     <main-file>wurfl.xml</main-file>
     <patches>
-      <patch>web_browsers_patch.xml</patch>
     </patches>
   </wurfl>
 
@@ -41,10 +40,8 @@ This is an example config file
   </cache>
 </wurfl-config>
 
-More advanced configurations can be done. For this, read the lib/wurfl/README.txt file.
+More advanced configurations can be done such as:
+- adding browser patches
+- choosing other caching mechnisms
 
-8) 
-
-UPDATING
-========
-http://sourceforge.net/projects/wurfl
+Go to http://wurfl.sourceforge.net/ fore more information on theconfiguration options
