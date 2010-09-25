@@ -1,5 +1,5 @@
 <?php
-// $Id: wurfl.module,v 1.8 2010/08/18 17:38:13 tdrycker Exp $
+// $Id: wurfl.module,v 1.9 2010/09/25 16:45:43 tdrycker Exp $
 
 /**
  * @file
@@ -45,15 +45,6 @@ function wurfl_menu() {
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -10,
   );
-  
-  $items['admin/settings/wurfl'] = array(
-    'title' => 'Wurfl', 
-    'page callback' =>  'drupal_get_form',
-    'page arguments' => array('wurfl_configuration_form'),
-    'access arguments' => array('configure wurfl'),
-     'type' => MENU_NORMAL_ITEM,
-     'description' => t('The WURFL module integrates Drupal with WURFL.')
-   );
 
   $items['admin/settings/wurfl/test'] = array(
     'title' => 'WURFL test',
