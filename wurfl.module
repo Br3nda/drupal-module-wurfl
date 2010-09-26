@@ -1,5 +1,5 @@
 <?php
-// $Id: wurfl.module,v 1.10 2010/09/25 17:20:19 tdrycker Exp $
+// $Id: wurfl.module,v 1.11 2010/09/26 13:56:10 tdrycker Exp $
 
 /**
  * @file
@@ -248,4 +248,11 @@ function wurfl_check_config($path){
     }
   }
   return FALSE;
+}
+
+/**
+ * Implementation of the hook_device_groups function
+ */
+function wurfl_device_groups(){
+  return array("mobile" => "Mobile Devices");
 }
