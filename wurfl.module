@@ -1,5 +1,5 @@
 <?php
-// $Id: wurfl.module,v 1.11 2010/09/26 13:56:10 tdrycker Exp $
+// $Id: wurfl.module,v 1.12 2010/09/26 15:12:50 tdrycker Exp $
 
 /**
  * @file
@@ -53,6 +53,18 @@ function wurfl_menu() {
     'type' => MENU_LOCAL_TASK,
     'weight' => 1,
   );  
+  return $items;
+}
+
+
+/**
+ * Implementation of hook_theme
+ */
+function wurfl_theme($existing, $type, $theme, $path){
+  $items['wurfl_status'] = array(
+    'arguments' => array('message' => NULL, 'type' => "status"),
+    'file' => 'wurfl.admin.inc',
+  );
   return $items;
 }
 
@@ -132,11 +144,12 @@ function wurfl_test_page() {
  */ 
 function wurfl_is_mobile_device() {
   if(empty($_SERVER['HTTP_USER_AGENT'])) {
-    return array('group' => 'desktop', 'type' => '');
+    return array('group' => '', 'type' => 'desktop');
   }
   $requestingDevice = wurfl_get_requestingDevice();
-  $result = ($requestingDevice->getCapability("is_wireless_device") == 'true') ? 'mobile' : 'desktop'; // This is strange, return value is string, not boolean
-  return $result;
+  $type = ($requestingDevice->getCapability("is_wireless_device") == 'true') ? 'mobile' : 'desktop'; // This is strange, return value is string, not boolean;
+  $group = $type; // currently WUFL only provides simple groups. 
+  return array('group' => $group, 'type' => $type);
 }
 
 

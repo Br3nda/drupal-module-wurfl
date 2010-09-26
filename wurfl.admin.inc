@@ -58,15 +58,6 @@ function wurfl_settings() {
   return $output;
 }
 
-/**
- * Implementation of hook_theme
- */
-function wurfl_theme($existing, $type, $theme, $path){
-  $items['wurfl_status'] = array(
-    'arguments' => array('message' => NULL, 'type' => "status"),
-  );
-  return $items;
-}
 
 /**
  * Theme the status messages
